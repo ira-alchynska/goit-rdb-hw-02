@@ -43,6 +43,24 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`order`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`order` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_number` INT NOT NULL,
+  `order_date` DATE NOT NULL,
+  `client_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_order_client_idx` (`client_id` ASC) VISIBLE,
+  CONSTRAINT `fk_order_client`
+    FOREIGN KEY (`client_id`)
+    REFERENCES `mydb`.`client` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`product`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`product` (
@@ -53,24 +71,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`order`
+-- Table `mydb`.`order_detail`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`order` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `order_number` INT NOT NULL,
-  `order_date` DATE NOT NULL,
+CREATE TABLE IF NOT EXISTS `mydb`.`order_detail` (
+  `id` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  `order_id` INT NOT NULL,
   `product_id` INT NOT NULL,
-  `product_quantity` INT NOT NULL,
-  `client_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_client_idx` (`client_id` ASC) VISIBLE,
-  INDEX `fk_order_product1_idx` (`product_id` ASC) VISIBLE,
-  CONSTRAINT `fk_order_client`
-    FOREIGN KEY (`client_id`)
-    REFERENCES `mydb`.`client` (`id`)
+  INDEX `fk_order_detail_order1_idx` (`order_id` ASC) VISIBLE,
+  INDEX `fk_order_detail_product1_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_order_detail_order1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `mydb`.`order` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_order_product1`
+  CONSTRAINT `fk_order_detail_product1`
     FOREIGN KEY (`product_id`)
     REFERENCES `mydb`.`product` (`id`)
     ON DELETE NO ACTION
